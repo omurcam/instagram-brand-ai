@@ -4,10 +4,10 @@ export interface Tool {
     description: string;
     parameters: {
         type: string;
-        properties: Record<string, any>;
+        properties: Record<string, unknown>;
         required: string[];
     };
-    execute: (params: any) => Promise<string>;
+    execute: (params: unknown) => Promise<string>;
 }
 
 // Web Search Tool
@@ -24,7 +24,8 @@ export const webSearchTool: Tool = {
         },
         required: ["query"]
     },
-    execute: async (params: { query: string }) => {
+    execute: async (params: unknown) => {
+        const { query } = params as { query: string };
         // Simulated web search with more realistic responses
         const searchTopics = {
             'react': 'React is a popular JavaScript library for building user interfaces. Latest version is React 18 with concurrent features.',
@@ -34,18 +35,18 @@ export const webSearchTool: Tool = {
             'technology': 'Technology trends in 2025 include AI integration, quantum computing advances, and sustainable tech solutions.'
         };
 
-        const query = params.query.toLowerCase();
+        const queryLower = query.toLowerCase();
         let result = '';
 
         for (const [topic, info] of Object.entries(searchTopics)) {
-            if (query.includes(topic)) {
-                result = `🔍 Web Search Results for "${params.query}":\n\n${info}\n\nSource: Multiple web sources aggregated`;
+            if (queryLower.includes(topic)) {
+                result = `🔍 Web Search Results for "${query}":\n\n${info}\n\nSource: Multiple web sources aggregated`;
                 break;
             }
         }
 
         if (!result) {
-            result = `🔍 Web Search Results for "${params.query}":\n\nFound relevant information from multiple sources. The topic appears to be current and has recent discussions in the community.`;
+            result = `🔍 Web Search Results for "${query}":\n\nFound relevant information from multiple sources. The topic appears to be current and has recent discussions in the community.`;
         }
 
         await new Promise(resolve => setTimeout(resolve, 800));
@@ -67,10 +68,11 @@ export const calculatorTool: Tool = {
         },
         required: ["expression"]
     },
-    execute: async (params: { expression: string }) => {
+    execute: async (params: unknown) => {
+        const { expression } = params as { expression: string };
         try {
             // Enhanced math evaluation with better safety
-            const sanitized = params.expression
+            const sanitized = expression
                 .replace(/[^0-9+\-*/().\s]/g, '')
                 .replace(/\s+/g, '');
 
@@ -89,9 +91,9 @@ export const calculatorTool: Tool = {
                 throw new Error('Invalid result');
             }
 
-            return `🧮 **Calculation Result:**\n${params.expression} = **${result}**\n\n${result % 1 === 0 ? 'Integer result' : 'Decimal result'}`;
+            return `🧮 **Calculation Result:**\n${expression} = **${result}**\n\n${result % 1 === 0 ? 'Integer result' : 'Decimal result'}`;
         } catch (error) {
-            return `❌ **Calculation Error:** "${params.expression}" is not a valid mathematical expression.\n\nSupported operations: +, -, *, /, parentheses\nExample: "25 * 47" or "(10 + 5) * 2"`;
+            return `❌ **Calculation Error:** "${expression}" is not a valid mathematical expression.\n\nSupported operations: +, -, *, /, parentheses\nExample: "25 * 47" or "(10 + 5) * 2"`;
         }
     }
 };
@@ -110,13 +112,14 @@ export const codeExecutorTool: Tool = {
         },
         required: ["code"]
     },
-    execute: async (params: { code: string }) => {
+    execute: async (params: unknown) => {
+        const { code } = params as { code: string };
         try {
             // Simulate code execution (in production, use a sandboxed environment)
             await new Promise(resolve => setTimeout(resolve, 500));
-            return `Kod çalıştırıldı:\n\`\`\`javascript\n${params.code}\n\`\`\`\n\nSonuç: Kod başarıyla çalıştırıldı.`;
-        } catch (error) {
-            return `Kod çalıştırma hatası: ${error}`;
+            return `Kod çalıştırıldı:\n\`\`\`javascript\n${code}\n\`\`\`\n\nSonuç: Kod başarıyla çalıştırıldı.`;
+        } catch {
+            return `Kod çalıştırma hatası: Beklenmeyen hata oluştu.`;
         }
     }
 };
@@ -135,11 +138,12 @@ export const weatherTool: Tool = {
         },
         required: ["location"]
     },
-    execute: async (params: { location: string }) => {
+    execute: async (params: unknown) => {
+        const { location } = params as { location: string };
         const mockWeather = [
-            `${params.location} için hava durumu: 22°C, Güneşli`,
-            `${params.location} şu anda 18°C, Bulutlu`,
-            `${params.location} hava durumu: 25°C, Parçalı bulutlu`
+            `${location} için hava durumu: 22°C, Güneşli`,
+            `${location} şu anda 18°C, Bulutlu`,
+            `${location} hava durumu: 25°C, Parçalı bulutlu`
         ];
 
         await new Promise(resolve => setTimeout(resolve, 800));
@@ -156,7 +160,7 @@ export const availableTools: Tool[] = [
 ];
 
 // Tool execution function
-export async function executeTool(toolName: string, parameters: any): Promise<string> {
+export async function executeTool(toolName: string, parameters: unknown): Promise<string> {
     const tool = availableTools.find(t => t.name === toolName);
     if (!tool) {
         throw new Error(`Tool ${toolName} not found`);

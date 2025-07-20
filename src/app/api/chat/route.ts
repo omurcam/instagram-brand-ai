@@ -1,6 +1,5 @@
 import OpenAI from 'openai';
 import { NextRequest } from 'next/server';
-import { availableTools, executeTool } from '@/lib/tools';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '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',
@@ -59,24 +58,14 @@ YANITLARINDA:
 
 Her zaman Türkçe yanıt ver ve pratik, uygulanabilir öneriler sun.`;
 
-// Convert our tools to OpenAI function format for native tool calling
-const getToolsSchema = () => {
-  return availableTools.map(tool => ({
-    type: "function" as const,
-    function: {
-      name: tool.name,
-      description: tool.description,
-      parameters: tool.parameters
-    }
-  }));
-};
+// Tools will be implemented in future versions
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     console.log('Request body:', body);
     
-    const { message, enableThinking = false, enableTools = true, conversationHistory = [] } = body;
+    const { message, enableThinking = false, conversationHistory = [] } = body;
     
     if (!message) {
       return new Response(JSON.stringify({ error: 'Message is required' }), { 
@@ -106,7 +95,7 @@ export async function POST(request: NextRequest) {
           // Start with simple streaming without tools first
           const completion = await openai.chat.completions.create({
             model: "moonshotai/kimi-k2-instruct",
-            messages: messages as any,
+            messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
             temperature: 0.6,
             max_tokens: 4096,
             stream: true

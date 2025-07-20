@@ -8,7 +8,7 @@ import { ModelInfo } from '@/components/ui/model-info';
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState<any[]>([]);
+  const [conversationHistory, setConversationHistory] = useState<Array<{role: string; content: string}>>([]);
 
   const handleSendMessage = async (content: string, options?: { enableThinking?: boolean; enableTools?: boolean }) => {
     // Kullanıcı mesajını ekle
