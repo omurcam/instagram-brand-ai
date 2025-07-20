@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📱 Instagram Marka Stratejisti AI
 
-## Getting Started
+Sosyal misyon odaklı Instagram marka stratejileri ve topluluk oluşturma konusunda uzman AI danışmanı.
 
-First, run the development server:
+## 🚀 Özellikler
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Marka Kimliği & Konumlandırma**: Sosyal misyon odaklı marka oluşturma
+- **Topluluk Analizi**: Değer temelli persona ve empati haritası
+- **Duygusal Tetikleyiciler**: Nöropazarlama ilkeleri
+- **İçerik Mimarisi**: Stratejik içerik planlama
+- **Haftalık İçerik Planları**: 3 içerikli detaylı haftalık strateji
+- **Performans Ölçümleme**: Sosyal etki metrikleri
+
+## 🛠️ Teknolojiler
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS, Motion/React
+- **AI Model**: Kimi-K2-Instruct (1T parameters)
+- **UI Components**: shadcn/ui, Lucide React
+- **Markdown**: React Markdown
+
+## 🔧 Kurulum
+
+1. Repository'yi klonlayın
+2. Bağımlılıkları yükleyin: `npm install`
+3. Environment variables'ları ayarlayın
+4. Geliştirme sunucusunu başlatın: `npm run dev`
+
+## 🌐 Environment Variables
+
+```env
+OPENAI_API_KEY=your-nvidia-api-key
+OPENAI_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📦 Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Bu proje Netlify'da deploy edilmek için optimize edilmiştir.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Kullanım Örnekleri
 
-## Learn More
+- "Sürdürülebilir moda markası için sosyal misyon oluştur"
+- "Teknoloji startup'ı için Instagram stratejisi hazırla"
+- "Organik gıda markası için haftalık içerik planı yap"
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 Lisans
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT License
