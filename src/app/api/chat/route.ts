@@ -61,13 +61,36 @@ Her zaman Türkçe yanıt ver ve pratik, uygulanabilir öneriler sun.`;
 // Tools will be implemented in future versions
 
 export async function POST(request: NextRequest) {
+  console.log('🚀 API Route called');
+  
   try {
+    // Check environment variables
+    const hasApiKey = !!process.env.OPENAI_API_KEY;
+    const baseUrl = process.env.OPENAI_BASE_URL;
+    
+    console.log('🔑 API Key exists:', hasApiKey);
+    console.log('🌐 Base URL:', baseUrl);
+    
+    if (!hasApiKey) {
+      console.error('❌ No API key found');
+      return new Response(JSON.stringify({ 
+        error: 'API key not configured' 
+      }), { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
     const body = await request.json();
-    console.log('Request body:', body);
+    console.log('📝 Request received:', { 
+      hasMessage: !!body.message, 
+      messageLength: body.message?.length 
+    });
     
     const { message, enableThinking = false, conversationHistory = [] } = body;
     
     if (!message) {
+      console.log('No message provided');
       return new Response(JSON.stringify({ error: 'Message is required' }), { 
         status: 400,
         headers: { 'Content-Type': 'application/json' }
@@ -92,7 +115,9 @@ export async function POST(request: NextRequest) {
             await new Promise(resolve => setTimeout(resolve, 300));
           }
 
-          // Start with simple streaming without tools first
+          // Test OpenAI connection first
+          console.log('Attempting OpenAI API call...');
+          
           const completion = await openai.chat.completions.create({
             model: "moonshotai/kimi-k2-instruct",
             messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
@@ -101,7 +126,7 @@ export async function POST(request: NextRequest) {
             stream: true
           });
 
-          console.log('OpenAI completion started');
+          console.log('OpenAI completion started successfully');
 
           for await (const chunk of completion) {
             const content = chunk.choices[0]?.delta?.content || '';

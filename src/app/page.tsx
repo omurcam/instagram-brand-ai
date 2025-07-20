@@ -85,10 +85,18 @@ export default function Home() {
       ]);
       
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Frontend Error:', error);
+      
+      let errorText = 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.';
+      
+      if (error instanceof Error) {
+        console.error('Error details:', error.message);
+        errorText = `Hata: ${error.message}`;
+      }
+      
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.',
+        content: errorText,
         sender: 'ai',
         timestamp: new Date(),
       };
