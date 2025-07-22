@@ -24,21 +24,42 @@ export default function Home() {
 
     try {
       // API çağrısı
+      console.log('🚀 Making API request...');
+      
+      const requestBody = { 
+        message: content,
+        enableThinking: options?.enableThinking || false,
+        enableTools: options?.enableTools || false,
+        conversationHistory: conversationHistory.slice(-10) // Keep last 10 exchanges
+      };
+      
+      console.log('📤 Request body:', requestBody);
+      
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          message: content,
-          enableThinking: options?.enableThinking || false,
-          enableTools: options?.enableTools || false,
-          conversationHistory: conversationHistory.slice(-10) // Keep last 10 exchanges
-        }),
+        body: JSON.stringify(requestBody),
+        // Increase timeout for longer responses
+        signal: AbortSignal.timeout(300000) // 5 minutes
       });
 
+      console.log('📥 Response status:', response.status);
+      console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
-        throw new Error('API request failed');
+        let errorText = `API request failed with status ${response.status}`;
+        try {
+          const errorBody = await response.text();
+          console.error('❌ Error response body:', errorBody);
+          if (errorBody) {
+            errorText += `: ${errorBody}`;
+          }
+        } catch (e) {
+          console.error('❌ Could not read error response body');
+        }
+        throw new Error(errorText);
       }
 
       // Stream okuma

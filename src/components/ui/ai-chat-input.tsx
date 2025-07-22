@@ -6,12 +6,12 @@ import { Lightbulb, Mic, Globe, Paperclip, Send } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 const PLACEHOLDERS = [
-  "Sürdürülebilir moda markası için sosyal misyon oluştur",
-  "Teknoloji startup'ı için Instagram stratejisi hazırla",
-  "Organik gıda markası için haftalık içerik planı yap",
-  "Eğitim platformu için topluluk analizi çıkar",
-  "Fitness markası için duygusal tetikleyiciler belirle",
-  "Sosyal girişim için marka kimliği oluştur",
+  "https://google.com",
+  "netflix.com sitesini analiz et",
+  "www.amazon.com nasıl performans gösteriyor?",
+  "github.com",
+  "Bu sitenin SEO'su nasıl: facebook.com",
+  "youtube.com erişilebilirlik analizi",
 ];
 
 interface AIChatInputProps {
@@ -199,8 +199,8 @@ const AIChatInput = ({ onSendMessage, isLoading = false }: AIChatInputProps) => 
 
             <button
               className={`flex items-center gap-1 p-3 rounded-full font-medium justify-center transition ${isLoading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-black hover:bg-zinc-700 text-white"
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-black hover:bg-zinc-700 text-white"
                 }`}
               title="Gönder"
               type="button"
@@ -241,8 +241,8 @@ const AIChatInput = ({ onSendMessage, isLoading = false }: AIChatInputProps) => 
               {/* Think Toggle */}
               <button
                 className={`flex items-center gap-1 px-4 py-2 rounded-full transition-all font-medium group ${thinkActive
-                    ? "bg-blue-600/10 outline outline-blue-600/60 text-blue-950"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "bg-blue-600/10 outline outline-blue-600/60 text-blue-950"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 title="Düşün"
                 type="button"
@@ -261,8 +261,8 @@ const AIChatInput = ({ onSendMessage, isLoading = false }: AIChatInputProps) => 
               {/* Deep Search Toggle */}
               <motion.button
                 className={`flex items-center px-4 gap-1 py-2 rounded-full transition font-medium whitespace-nowrap overflow-hidden justify-start ${deepSearchActive
-                    ? "bg-blue-600/10 outline outline-blue-600/60 text-blue-950"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "bg-blue-600/10 outline outline-blue-600/60 text-blue-950"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 title="Tools"
                 type="button"

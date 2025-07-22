@@ -7,3 +7,7 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[functions]
+  # Increase function timeout for longer responses
+  timeout = 300

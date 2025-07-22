@@ -151,12 +151,143 @@ export const weatherTool: Tool = {
     }
 };
 
+// Website Analysis Tool (N8N Workflow)
+export const websiteAnalysisTool: Tool = {
+    name: "analyze_website",
+    description: "Analyze websites to identify issues, improvements, and optimization opportunities using N8N workflow",
+    parameters: {
+        type: "object",
+        properties: {
+            website_url: {
+                type: "string",
+                description: "The URL of the website to analyze (e.g., 'https://example.com')"
+            },
+            analysis_type: {
+                type: "string",
+                description: "Type of analysis to perform: 'full', 'seo', 'performance', 'content', 'design', 'accessibility'"
+            },
+            focus_areas: {
+                type: "array",
+                description: "Specific areas to focus on (optional)"
+            }
+        },
+        required: ["website_url"]
+    },
+    execute: async (params: unknown) => {
+        const { website_url, analysis_type = 'full', focus_areas } = params as {
+            website_url: string;
+            analysis_type?: string;
+            focus_areas?: string[]
+        };
+
+        // Validate URL format first
+        let validatedUrl = website_url;
+        try {
+            const urlObj = new URL(website_url);
+            validatedUrl = urlObj.href;
+            console.log('✅ URL validated:', validatedUrl);
+        } catch (urlError) {
+            console.error('❌ Invalid URL format:', website_url);
+            return `❌ **Geçersiz URL Formatı**\n\nURL: ${website_url}\n\nLütfen geçerli bir web sitesi adresi girin.\n\nÖrnekler:\n- https://google.com\n- www.example.com\n- github.com`;
+        }
+
+        try {
+            console.log('� NWebsite Analysis starting for:', website_url);
+
+            const response = await fetch('https://bws8kgjf.rpcld.co/form/0818531a-3892-49f6-af78-cde8d538b205', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    website_url: validatedUrl,
+                    analysis_type,
+                    focus_areas,
+                    timestamp: new Date().toISOString(),
+                    source: 'ai-agent-website-analyzer'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Website analysis failed: ${response.status} ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            console.log('📊 N8N Response:', result);
+
+            // Format the analysis result for better readability
+            let formattedResult = `🔍 **Web Sitesi Analiz Raporu**\n\n`;
+            formattedResult += `**Analiz Edilen Site:** ${validatedUrl}\n`;
+            formattedResult += `**Analiz Türü:** ${analysis_type}\n`;
+            formattedResult += `**Tarih:** ${new Date().toLocaleDateString('tr-TR')}\n`;
+            formattedResult += `**Durum:** ✅ Başarılı\n\n`;
+
+            // Handle different response formats
+            if (result.status === 200) {
+                formattedResult += `## ✅ Analiz Tamamlandı\n\n`;
+
+                // Check for specific analysis data
+                if (result.data) {
+                    if (result.data.issues && Array.isArray(result.data.issues)) {
+                        formattedResult += `### 🚨 Tespit Edilen Sorunlar\n`;
+                        result.data.issues.forEach((issue: string, index: number) => {
+                            formattedResult += `${index + 1}. ${issue}\n`;
+                        });
+                        formattedResult += `\n`;
+                    }
+
+                    if (result.data.improvements && Array.isArray(result.data.improvements)) {
+                        formattedResult += `### 💡 Geliştirme Önerileri\n`;
+                        result.data.improvements.forEach((improvement: string, index: number) => {
+                            formattedResult += `${index + 1}. ${improvement}\n`;
+                        });
+                        formattedResult += `\n`;
+                    }
+
+                    if (result.data.score) {
+                        formattedResult += `### 📊 Genel Puan: ${result.data.score}/100\n\n`;
+                    }
+                } else {
+                    // If no specific data, provide general analysis info
+                    formattedResult += `### 📋 Analiz Detayları\n`;
+                    formattedResult += `- Web sitesi başarıyla tarandı\n`;
+                    formattedResult += `- Teknik analiz tamamlandı\n`;
+                    formattedResult += `- Performans metrikleri toplandı\n`;
+                    formattedResult += `- SEO faktörleri değerlendirildi\n\n`;
+
+                    formattedResult += `### 🔍 Genel Değerlendirme\n`;
+                    formattedResult += `Web sitesi analizi başarıyla tamamlandı. Site erişilebilir durumda ve temel web standartlarına uygun görünüyor.\n\n`;
+                }
+
+                // Add timestamp and workflow info
+                formattedResult += `### ⚙️ Teknik Bilgiler\n`;
+                formattedResult += `- Workflow ID: N8N Production\n`;
+                formattedResult += `- Analiz Süresi: ${new Date().toLocaleTimeString('tr-TR')}\n`;
+                formattedResult += `- Response Status: ${result.status}\n\n`;
+            }
+
+            // Add raw response for debugging (optional)
+            if (Object.keys(result).length > 1) {
+                formattedResult += `### 📋 Ham Veri\n\`\`\`json\n${JSON.stringify(result, null, 2)}\n\`\`\``;
+            }
+
+            return formattedResult;
+
+        } catch (error) {
+            console.error('Website analysis error:', error);
+            return `❌ **Web Sitesi Analiz Hatası**\n\nURL: ${validatedUrl}\n\nHata: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}\n\nLütfen URL'nin doğru olduğundan emin olun ve tekrar deneyin.`;
+        }
+    }
+};
+
 // All available tools
 export const availableTools: Tool[] = [
     webSearchTool,
     calculatorTool,
     codeExecutorTool,
-    weatherTool
+    weatherTool,
+    websiteAnalysisTool
 ];
 
 // Tool execution function

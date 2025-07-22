@@ -1,12 +1,14 @@
 import { NextRequest } from 'next/server';
 
 export async function GET() {
+  console.log('🧪 Test API called');
   return new Response(JSON.stringify({ 
     status: 'API is working',
     timestamp: new Date().toISOString(),
     env: {
       hasApiKey: !!process.env.OPENAI_API_KEY,
-      baseUrl: process.env.OPENAI_BASE_URL || 'not set'
+      baseUrl: process.env.OPENAI_BASE_URL || 'not set',
+      nodeEnv: process.env.NODE_ENV
     }
   }), {
     headers: { 'Content-Type': 'application/json' }
